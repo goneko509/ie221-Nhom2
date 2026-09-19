@@ -1,0 +1,11 @@
+Ứng dụng Kiểm tra độ mạnh mật khẩu
+=====================================
+
+Môn học  : IE221 - Kỹ thuật lập trình Python
+Nhóm     : Nhóm 2
+
+Thành viên:
+  - Nguyễn Tấn Viễn  (MSSV: 25410333)
+  - Nguyễn Mai Xuân  (MSSV: 25410342)
+
+Mô tả : Ứng dụng phân tích và đánh giá độ mạnh mật khẩu dựa trên lý thuyết Entropy thông tin, kiểm tra từ điển tiếng Anh và phát hiện chuỗi lặp thông qua Công nghệ: Python · Tkinter · FastAPI · Uvicorn
