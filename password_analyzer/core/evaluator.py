@@ -14,13 +14,20 @@ class PasswordEvaluator:
         self.suggestions = []
         self.is_valid = True
 
-    def evaluate(self):
+    def evaluate(self, **kwargs):
         """
         Thực thi quy trình đánh giá mật khẩu:
         1. Gọi hàm Validator kiểm tra ngoại lệ.
         2. Gọi hàm phân tích Rules lấy các cờ hiệu (flags).
         3. Tính toán điểm số và cấp độ.
+        Hỗ trợ **kwargs để tùy chỉnh các ngưỡng điểm linh hoạt:
+        - threshold_weak (int): Điểm tối đa của mức Yếu (mặc định 40)
+        - threshold_medium (int): Điểm tối đa của mức Trung bình (mặc định 70)
         """
+        # Trích xuất cấu hình từ kwargs (tham số động)
+        t_weak = kwargs.get("threshold_weak", 40)
+        t_medium = kwargs.get("threshold_medium", 70)
+
         # Reset trạng thái mỗi khi đánh giá lại
         self.score = 0
         self.suggestions.clear()
@@ -105,13 +112,13 @@ class PasswordEvaluator:
         
         self.penalty = penalty  # Lưu lại để GUI biết có phạt hay không
         
-        # 6. Phân loại mức độ bảo mật chuẩn quốc tế
-        if self.score < 40:
+        # 6. Phân loại mức độ bảo mật chuẩn quốc tế (Sử dụng ngưỡng điểm linh hoạt từ kwargs)
+        if self.score < t_weak:
             self.strength_level = "Yếu"
-            self.suggestions.append("💡 Mật khẩu rất dễ bị bẻ khóa. Hãy tăng cả chiều dài L và độ phức tạp N.")
-        elif 40 <= self.score < 70:
+            self.suggestions.append(f"💡 Mật khẩu dưới {t_weak} điểm rất dễ bị bẻ khóa. Hãy tăng cả chiều dài L và độ phức tạp N.")
+        elif t_weak <= self.score < t_medium:
             self.strength_level = "Trung bình"
-            self.suggestions.append("💡 Mức độ an toàn tạm ổn, nhưng vẫn có thể bị tấn công Brute-force.")
+            self.suggestions.append(f"💡 Mức độ an toàn tạm ổn (từ {t_weak} đến dưới {t_medium} điểm), nhưng vẫn có thể bị tấn công Brute-force.")
         else:
             self.strength_level = "Mạnh"
             
