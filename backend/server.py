@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 # Cấu hình nguồn từ điển: Sử dụng bộ 10,000 từ phổ biến của Google
 # DICTIONARY_URL = "https://raw.githubusercontent.com/first20hours/google-10000-english/master/google-10000-english.txt"
 # DICTIONARY_FILE = "backend/google-10000-english.txt"
-DICTIONARY_URL = "https://github.com/dwyl/english-words/blob/master/words_alpha.txt"
+DICTIONARY_URL = "https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt"
 DICTIONARY_FILE = "backend/words_alpha.txt"
 
 
