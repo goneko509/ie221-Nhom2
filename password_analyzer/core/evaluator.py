@@ -14,15 +14,15 @@ class PasswordEvaluator:
         self.suggestions = []
         self.is_valid = True
 
-    def evaluate(self, **kwargs):
+    def evaluate(self, *args, **kwargs):
         """
         Thực thi quy trình đánh giá mật khẩu:
         1. Gọi hàm Validator kiểm tra ngoại lệ.
         2. Gọi hàm phân tích Rules lấy các cờ hiệu (flags).
         3. Tính toán điểm số và cấp độ.
-        Hỗ trợ **kwargs để tùy chỉnh các ngưỡng điểm linh hoạt:
-        - threshold_weak (int): Điểm tối đa của mức Yếu (mặc định 40)
-        - threshold_medium (int): Điểm tối đa của mức Trung bình (mặc định 70)
+        Hỗ trợ *args và **kwargs để tăng tính linh hoạt:
+        - *args: Danh sách các hàm kiểm tra lỗi bổ sung (Custom rules - Dependency Injection).
+        - **kwargs: Cấu hình ngưỡng điểm (threshold_weak, threshold_medium).
         """
         # Trích xuất cấu hình từ kwargs (tham số động)
         t_weak = kwargs.get("threshold_weak", 40)
@@ -97,6 +97,16 @@ class PasswordEvaluator:
             words_str = ", ".join(dictionary_words)
             self.suggestions.append(f"❌ Lỗ hổng: Chứa từ tiếng Anh dễ đoán '{words_str}' (-15 bits)")
             penalty += 15
+            
+        # 5.5. Thực thi các rule tùy chỉnh (Dependency Injection) từ *args
+        if args:
+            for custom_rule in args:
+                if callable(custom_rule):
+                    custom_issues = custom_rule(self.__password)
+                    if custom_issues:
+                        for issue in custom_issues:
+                            self.suggestions.append(f"❌ Lỗ hổng (Custom): {issue} (-10 bits)")
+                            penalty += 10
             
         final_entropy = entropy - penalty
         if final_entropy < 0:
