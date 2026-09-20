@@ -10,7 +10,7 @@ class PasswordCheckerApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Password Checker")
-        self.root.geometry("550x550")
+        self.root.geometry("450x550")
         self.root.resizable(False, False)
         
         self.setup_ui()
@@ -182,7 +182,11 @@ class PasswordCheckerApp:
         if score == 100 and not feedback.get("has_penalty", False):
             self._insert_suggestion("🏆 Tuyệt vời! Mật khẩu của bạn đạt điểm tối đa.")
         else:
-            self._insert_suggestion("💡 Lời khuyên: Hãy khắc phục các lỗi ❌ để đạt 100 điểm.")
+            has_errors = any(sug.startswith("❌") for sug in feedback["suggestions"])
+            if has_errors:
+                self._insert_suggestion("💡 Lời khuyên: Hãy khắc phục các lỗi ❌ để đạt 100 điểm.")
+            else:
+                self._insert_suggestion("💡 Lời khuyên: Hãy tăng độ dài hoặc độ phức tạp của mật khẩu để đạt 100 điểm.")
         
         self.suggestions_text.config(state=tk.DISABLED)
 
